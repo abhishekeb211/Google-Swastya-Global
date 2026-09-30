@@ -1,6 +1,8 @@
 {
-  "name": "SwasthyaSetu Resilience Grid 2.0",
+  "name": "Google SwasthyaSetu Global ",
   "description": "Federated, explainable, PQC-secured, offline-first health resource, referral, supply-chain and audit coordination network.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

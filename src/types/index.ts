@@ -41,6 +41,11 @@ export interface ServiceCapability {
   specialistOnDuty: CapabilityState;
   specialistName?: string;
   specialtyType?: string;
+  // Mental Health & Psychosocial capabilities
+  psychiatry?: CapabilityState;
+  counseling?: CapabilityState;
+  deaddiction?: CapabilityState;
+  teleManasUnit?: CapabilityState;
 }
 
 export interface BedCapacity {
@@ -52,6 +57,10 @@ export interface BedCapacity {
   icuTotal: number;
   icuOccupied: number;
   icuReady: number;
+  // Mental health & psychiatric capacity
+  psychiatricTotal?: number;
+  psychiatricOccupied?: number;
+  psychiatricReady?: number;
 }
 
 export interface Facility {
@@ -225,9 +234,67 @@ export interface AuditLedgerEvent {
 
 export interface OfflineQueueItem {
   id: string;
-  type: 'MEDICINE_ISSUED' | 'STOCK_RECEIVED' | 'REFERRAL_DRAFT' | 'BED_UPDATE';
+  type: 'MEDICINE_ISSUED' | 'STOCK_RECEIVED' | 'REFERRAL_DRAFT' | 'BED_UPDATE' | 'MENTAL_HEALTH_SCREENING';
   facilityId: string;
   timestamp: string;
   payload: any;
   status: 'PENDING_SYNC' | 'SYNCED' | 'CONFLICT_RESOLVED';
+}
+
+// Mental Health & Psychosocial Resilience Models
+export type SoothingThemeMode = 'mint-eucalyptus' | 'lavender-serenity' | 'azure-sky' | 'clinical-daylight';
+
+export interface Phq9Screening {
+  id: string;
+  patientRef: string;
+  patientName: string;
+  age: number;
+  gender: string;
+  answers: number[]; // 9 items, 0 to 3 each
+  totalScore: number;
+  severity: 'MINIMAL' | 'MILD' | 'MODERATE' | 'MODERATELY_SEVERE' | 'SEVERE';
+  suicideRiskIdentified: boolean;
+  clinicalAction: string;
+  conductedAt: string;
+  conductedBy: string;
+}
+
+export interface Gad7Screening {
+  id: string;
+  patientRef: string;
+  patientName: string;
+  answers: number[]; // 7 items, 0 to 3 each
+  totalScore: number;
+  severity: 'MINIMAL' | 'MILD' | 'MODERATE' | 'SEVERE';
+  clinicalAction: string;
+  conductedAt: string;
+}
+
+export interface TeleManasCallRecord {
+  callId: string;
+  callerDistrict: string;
+  callerAgeGroup: string;
+  primaryConcern: 'ANXIETY_PANIC' | 'SEVERE_DEPRESSION' | 'SUBSTANCE_WITHDRAWAL' | 'EXAM_STRESS' | 'DOMESTIC_DISTRESS' | 'GRIEF';
+  urgencyLevel: 'TIER_1_ROUTINE' | 'TIER_2_ELEVATED' | 'TIER_3_CRISIS_EMERGENCY';
+  assignedCounselor: string;
+  counselorId: string;
+  status: 'QUEUED' | 'IN_CALL' | 'REFERRED_TO_CHC' | 'RESOLVED_TELEPHONICALLY';
+  durationMinutes: number;
+  recommendation: string;
+  dispatchedMobileTeam: boolean;
+  timestamp: string;
+}
+
+export interface MentalHealthBedRecord {
+  id: string;
+  facilityId: string;
+  facilityName: string;
+  wardType: 'PSYCHIATRIC_INTENSIVE' | 'DE_ADDICTION' | 'ADOLESCENT_PSYCH' | 'GERIATRIC_NEURO' | 'CALM_ROOM';
+  bedNumber: string;
+  state: BedState;
+  genderReserved: 'MALE' | 'FEMALE' | 'ANY';
+  doctorInCharge: string;
+  patientName?: string;
+  patientAge?: number;
+  admissionDate?: string;
 }

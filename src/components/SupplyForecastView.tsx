@@ -52,13 +52,33 @@ export const SupplyForecastView: React.FC<SupplyForecastViewProps> = ({
   const getStatusBadge = (status: ResilienceStatus) => {
     switch (status) {
       case 'CRITICAL':
-        return <span className="px-2 py-0.5 text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 rounded">CRITICAL DEFICIT</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+            Critical Deficit
+          </span>
+        );
       case 'AT_RISK':
-        return <span className="px-2 py-0.5 text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 rounded">AT RISK</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-orange-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+            At Risk
+          </span>
+        );
       case 'WATCH':
-        return <span className="px-2 py-0.5 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded">WATCH</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            Watch
+          </span>
+        );
       case 'STABLE':
-        return <span className="px-2 py-0.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded">STABLE</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-800">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+            Stable
+          </span>
+        );
     }
   };
 

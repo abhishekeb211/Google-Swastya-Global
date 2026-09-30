@@ -17,7 +17,10 @@ import {
   INITIAL_FACILITIES, 
   INITIAL_INVENTORY, 
   INITIAL_AMBULANCES, 
-  INITIAL_LEDGER_EVENTS 
+  INITIAL_LEDGER_EVENTS,
+  INITIAL_TELEMANAS_CALLS,
+  INITIAL_MENTAL_HEALTH_BEDS,
+  INITIAL_MENTAL_HEALTH_INVENTORY
 } from './data/mockDatabase';
 import { 
   generateSha256, 
@@ -30,6 +33,7 @@ import { MasterLoopBar } from './components/MasterLoopBar';
 import { LiveStateView } from './components/LiveStateView';
 import { SupplyForecastView } from './components/SupplyForecastView';
 import { ReferralCareMatchView } from './components/ReferralCareMatchView';
+import { MentalHealthResilienceView } from './components/MentalHealthResilienceView';
 import { AmbulanceFleetView } from './components/AmbulanceFleetView';
 import { GeminiOrchestratorView } from './components/GeminiOrchestratorView';
 import { PqcAuditLedgerView } from './components/PqcAuditLedgerView';
@@ -53,9 +57,15 @@ export default function App() {
 
   // Primary Domain State
   const [facilities, setFacilities] = useState<Facility[]>(INITIAL_FACILITIES);
-  const [inventories, setInventories] = useState<MedicineInventory[]>(INITIAL_INVENTORY);
+  const [inventories, setInventories] = useState<MedicineInventory[]>([
+    ...INITIAL_INVENTORY,
+    ...INITIAL_MENTAL_HEALTH_INVENTORY
+  ]);
   const [ambulances, setAmbulances] = useState<Ambulance[]>(INITIAL_AMBULANCES);
   const [ledgerEvents, setLedgerEvents] = useState<AuditLedgerEvent[]>(INITIAL_LEDGER_EVENTS);
+  const [teleManasCalls, setTeleManasCalls] = useState(INITIAL_TELEMANAS_CALLS);
+  const [mentalHealthBeds, setMentalHealthBeds] = useState(INITIAL_MENTAL_HEALTH_BEDS);
+  const [psychotropicInventory, setPsychotropicInventory] = useState(INITIAL_MENTAL_HEALTH_INVENTORY);
   const [activeReferrals, setActiveReferrals] = useState<ReferralPatient[]>([
     {
       id: 'ref_init_01',
@@ -315,6 +325,28 @@ export default function App() {
     }, 800);
   };
 
+  // Mental Health & Tele-MANAS Call updates
+  const handleUpdateTeleManasCall = (callId: string, updates: Partial<typeof teleManasCalls[0]>) => {
+    setTeleManasCalls(prev => prev.map(c => c.callId === callId ? { ...c, ...updates } : c));
+    appendLedgerEvent(
+      'CARE_MATCHED',
+      `Tele-MANAS Call ${callId} updated. Status: ${updates.status || 'Updated'}. Protocol logged.`,
+      'Tele-MANAS District Hub 14416'
+    );
+    showToast(`Tele-MANAS 14416: Call ${callId} updated.`);
+  };
+
+  // Psychiatric Bed State Transition
+  const handleUpdateBedState = (bedId: string, newState: BedState, patientName?: string) => {
+    setMentalHealthBeds(prev => prev.map(b => b.id === bedId ? { ...b, state: newState, patientName } : b));
+    appendLedgerEvent(
+      newState === 'OCCUPIED' ? 'BED_HELD' : 'BED_RESERVED',
+      `Psychiatric Bed ${bedId} updated to ${newState}${patientName ? ` for ${patientName}` : ''}.`,
+      'Hospital B Calm Room & Psych Unit'
+    );
+    showToast(`Psychiatric Bed ${bedId} transitioned to ${newState}.`);
+  };
+
   // Guided Scenario Step Appliers
   const handleApplyScenario1Step = (stepNumber: number) => {
     if (stepNumber <= 4) {
@@ -357,13 +389,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FAFCFA] text-slate-800 flex flex-col font-sans">
       
-      {/* Toast Notification */}
+      {/* Toast Notification (Soothing light card) */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs flex items-center gap-2 border border-slate-700 animate-in slide-in-from-bottom-2">
-          <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-          <span>{toastMessage}</span>
+        <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 bg-white/95 backdrop-blur-md text-emerald-950 px-4 py-3 rounded-2xl shadow-xl text-xs flex items-center gap-2.5 border border-emerald-200/90 animate-in slide-in-from-bottom-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+          <span className="font-medium">{toastMessage}</span>
         </div>
       )}
 
@@ -399,12 +431,12 @@ export default function App() {
       />
 
       {/* Main Viewport Workspace Container with Adaptive / Flutter Device Mode */}
-      <div className={`flex-1 w-full transition-all ${deviceMode !== 'fluid' ? 'bg-slate-50/50 py-2 sm:py-4' : ''}`}>
+      <div className={`flex-1 w-full transition-all ${deviceMode !== 'fluid' ? 'bg-[#F2F7F4]/70 py-2 sm:py-4' : ''}`}>
         <main className={`w-full transition-all pb-24 md:pb-8 ${
           deviceMode === 'mobile'
-            ? 'max-w-[400px] mx-auto border-x border-slate-200 shadow-xl bg-white min-h-[calc(100vh-140px)] px-3 py-4'
+            ? 'max-w-[400px] mx-auto border-x border-emerald-100 shadow-xl bg-white min-h-[calc(100vh-140px)] px-3 py-4'
             : deviceMode === 'tablet'
-            ? 'max-w-[768px] mx-auto border-x border-slate-200 shadow-md bg-white min-h-[calc(100vh-140px)] px-4 py-5'
+            ? 'max-w-[768px] mx-auto border-x border-emerald-100 shadow-md bg-white min-h-[calc(100vh-140px)] px-4 py-5'
             : deviceMode === 'desktop'
             ? 'max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6'
             : 'max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6'
@@ -445,6 +477,26 @@ export default function App() {
             />
           )}
 
+          {currentTab === 'mental-health' && (
+            <MentalHealthResilienceView
+              userContext={userContext}
+              facilities={facilities}
+              teleManasCalls={teleManasCalls}
+              onUpdateTeleManasCall={handleUpdateTeleManasCall}
+              mentalHealthBeds={mentalHealthBeds}
+              onUpdateBedState={handleUpdateBedState}
+              psychotropicInventory={psychotropicInventory}
+              onInitiateTransfer={(inv) => {
+                setCurrentTab('supply-forecast');
+                showToast(`Reviewing redistribution for ${inv.medicineName}`);
+              }}
+              onReferToBed={(bed) => {
+                setCurrentTab('referral-care');
+                showToast(`Care Match initiated for ${bed.bedNumber}`);
+              }}
+            />
+          )}
+
           {currentTab === 'ambulance-fleet' && (
             <AmbulanceFleetView
               ambulances={ambulances}
@@ -479,6 +531,7 @@ export default function App() {
         onLaunchScenario2={() => setScenario2Open(true)}
         onOpenSync={() => setIsSyncModalOpen(true)}
         onOpenGemini={() => setCurrentTab('gemini-xai')}
+        onOpenMentalHealth={() => setCurrentTab('mental-health')}
         pendingSyncCount={offlineQueue.length}
       />
 
@@ -493,7 +546,7 @@ export default function App() {
       <footer className="bg-white border-t border-slate-200 py-4 px-4 sm:px-6 lg:px-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-800">SwasthyaSetu Resilience Grid 2.0</span>
+            <span className="font-semibold text-slate-800">Google SwasthyaSetu Global</span>
             <span>·</span>
             <span>Federated Healthcare Coordination Protocol</span>
             <span>·</span>

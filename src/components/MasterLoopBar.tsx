@@ -52,20 +52,20 @@ export const MasterLoopBar: React.FC<MasterLoopBarProps> = ({
   onSelectStep,
 }) => {
   return (
-    <div className="bg-white border-b border-slate-200 py-2 sm:py-2.5 px-3 sm:px-6 lg:px-8 shadow-2xs">
+    <div className="bg-white/90 backdrop-blur-xs border-b border-emerald-100 py-2 sm:py-2.5 px-3 sm:px-6 lg:px-8 shadow-2xs">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between gap-2 mb-1.5 sm:mb-2 text-xs">
           <div className="flex items-center gap-1.5 sm:gap-2 truncate">
-            <span className="font-bold text-slate-800 tracking-wide uppercase text-[11px] sm:text-xs shrink-0">
-              Master Loop
+            <span className="font-bold text-emerald-950 tracking-wide uppercase text-[11px] sm:text-xs shrink-0">
+              Master Protocol
             </span>
-            <span className="text-slate-300 hidden sm:inline">·</span>
+            <span className="text-emerald-200 hidden sm:inline">·</span>
             <span className="text-slate-500 text-[11px] sm:text-xs truncate hidden sm:inline">
-              14-Stage Healthcare Protocol
+              Mindful Closed-Loop Coordination
             </span>
           </div>
-          <div className="text-[11px] sm:text-xs text-teal-700 font-medium shrink-0">
-            Active: <span className="font-semibold text-slate-900">{MASTER_STEPS[activeStepIndex]?.name}</span>
+          <div className="text-[11px] sm:text-xs text-emerald-800 font-medium shrink-0">
+            Active: <span className="font-bold text-emerald-950">{MASTER_STEPS[activeStepIndex]?.name}</span>
           </div>
         </div>
 
@@ -80,22 +80,22 @@ export const MasterLoopBar: React.FC<MasterLoopBarProps> = ({
                 <button
                   onClick={() => onSelectStep(idx)}
                   title={`${step.name}: ${step.description}`}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all border min-h-[36px] active:scale-95 ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all border min-h-[36px] active:scale-95 ${
                     isActive
-                      ? 'bg-teal-600 text-white border-teal-700 shadow-xs font-semibold'
+                      ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs font-semibold'
                       : isCompleted
-                      ? 'bg-teal-50/80 text-teal-900 border-teal-200 hover:bg-teal-100'
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-emerald-50 text-emerald-900 border-emerald-200/80 hover:bg-emerald-100/60'
+                      : 'bg-white text-slate-600 border-slate-200/80 hover:bg-emerald-50/50 hover:text-emerald-900'
                   }`}
                 >
-                  <span className={`${isActive ? 'text-white' : isCompleted ? 'text-teal-600' : 'text-slate-400'}`}>
+                  <span className={`${isActive ? 'text-white' : isCompleted ? 'text-emerald-600' : 'text-slate-400'}`}>
                     {step.icon}
                   </span>
                   <span>{step.name}</span>
                 </button>
 
                 {idx < MASTER_STEPS.length - 1 && (
-                  <ChevronRight className="w-3 h-3 text-slate-300 shrink-0" />
+                  <ChevronRight className="w-3 h-3 text-emerald-200 shrink-0" />
                 )}
               </React.Fragment>
             );

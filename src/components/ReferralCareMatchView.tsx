@@ -307,12 +307,14 @@ export const ReferralCareMatchView: React.FC<ReferralCareMatchViewProps> = ({
                               {result.facility.name}
                             </h4>
                             {result.careAvailable ? (
-                              <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-100 text-emerald-800 rounded">
-                                CARE READY (100%)
+                              <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                                Care Ready (100%)
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 text-[11px] font-semibold bg-rose-100 text-rose-800 rounded">
-                                DISQUALIFIED
+                              <span className="inline-flex items-center gap-1 text-xs font-medium text-rose-700">
+                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                Disqualified
                               </span>
                             )}
                           </div>

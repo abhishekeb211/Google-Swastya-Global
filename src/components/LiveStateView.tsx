@@ -199,10 +199,10 @@ export const LiveStateView: React.FC<LiveStateViewProps> = ({
                     setSelectedFacility(fac);
                     setMobileSheetOpen(true);
                   }}
-                  className={`p-4 bg-white rounded-lg border cursor-pointer transition-all active:scale-[0.99] min-h-[44px] ${
+                  className={`p-4 bg-white rounded-2xl border cursor-pointer transition-all active:scale-[0.99] min-h-[44px] ${
                     isSelected
-                      ? 'border-teal-500 ring-1 ring-teal-500 shadow-xs'
-                      : 'border-slate-200 hover:border-slate-300'
+                      ? 'border-emerald-600 ring-2 ring-emerald-600/20 shadow-xs'
+                      : 'border-slate-200/90 hover:border-emerald-300'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -211,26 +211,31 @@ export const LiveStateView: React.FC<LiveStateViewProps> = ({
                         <h3 className="text-sm font-semibold text-slate-900">
                           {fac.name}
                         </h3>
-                        <span className={`px-2 py-0.5 text-[10px] font-medium rounded border ${getFreshnessColor(fac.freshness)}`}>
-                          {fac.freshness} · {fac.lastSyncTime}
+                        <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-mono tabular-nums">
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            fac.freshness === 'LIVE' ? 'bg-emerald-500 animate-pulse' : 
+                            fac.freshness === 'CURRENT' ? 'bg-teal-500' : 
+                            fac.freshness === 'AGING' ? 'bg-amber-500' : 'bg-rose-500'
+                          }`}></span>
+                          {fac.lastSyncTime}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                      <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
                         <span>{fac.type.replace('_', ' ')}</span>
-                        <span>·</span>
+                        <span aria-hidden="true" className="text-slate-300">·</span>
                         <span>{fac.district}</span>
-                        <span>·</span>
+                        <span aria-hidden="true" className="text-slate-300">·</span>
                         <span>Connectivity: {fac.connectivity}</span>
                       </div>
                     </div>
 
                     <div className="text-right shrink-0">
-                      <div className="text-xs text-slate-500">Ready Beds</div>
-                      <div className="text-base font-bold text-teal-700 tabular-nums">
+                      <div className="text-xs text-slate-400">Ready Beds</div>
+                      <div className="text-base font-bold text-emerald-800 tabular-nums">
                         {fac.capacity.ready} <span className="text-xs font-normal text-slate-400">/ {fac.capacity.functional}</span>
                       </div>
                       {fac.capacity.icuTotal > 0 && (
-                        <div className="text-[11px] text-slate-600">
+                        <div className="text-xs text-slate-500">
                           ICU Ready: <span className="font-semibold text-slate-900 tabular-nums">{fac.capacity.icuReady}</span>
                         </div>
                       )}
@@ -238,19 +243,26 @@ export const LiveStateView: React.FC<LiveStateViewProps> = ({
                   </div>
 
                   {/* Service capability indicators */}
-                  <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-100 text-[11px]">
-                    <span className="text-slate-400 py-0.5">Services:</span>
-                    <span className={`px-2 py-0.5 rounded ${fac.services.icu === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-50 text-slate-600'}`}>
-                      ICU: {fac.services.icu}
+                  <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
+                    <span className="text-slate-400 font-medium">Services:</span>
+                    <span className={`inline-flex items-center gap-1 ${fac.services.icu === 'AVAILABLE' ? 'text-emerald-800 font-medium' : 'text-slate-500'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${fac.services.icu === 'AVAILABLE' ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                      ICU
                     </span>
-                    <span className={`px-2 py-0.5 rounded ${fac.services.emergency === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-50 text-slate-600'}`}>
-                      Emergency: {fac.services.emergency}
+                    <span aria-hidden="true" className="text-slate-300">·</span>
+                    <span className={`inline-flex items-center gap-1 ${fac.services.emergency === 'AVAILABLE' ? 'text-emerald-800 font-medium' : 'text-slate-500'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${fac.services.emergency === 'AVAILABLE' ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                      Emergency
                     </span>
-                    <span className={`px-2 py-0.5 rounded ${fac.services.oxygenPlant === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-50 text-slate-600'}`}>
-                      Oxygen: {fac.services.oxygenPlant}
+                    <span aria-hidden="true" className="text-slate-300">·</span>
+                    <span className={`inline-flex items-center gap-1 ${fac.services.oxygenPlant === 'AVAILABLE' ? 'text-emerald-800 font-medium' : 'text-slate-500'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${fac.services.oxygenPlant === 'AVAILABLE' ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                      Oxygen Plant
                     </span>
-                    <span className={`px-2 py-0.5 rounded ${fac.services.specialistOnDuty === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-50 text-slate-600'}`}>
-                      Specialist: {fac.services.specialistOnDuty}
+                    <span aria-hidden="true" className="text-slate-300">·</span>
+                    <span className={`inline-flex items-center gap-1 ${fac.services.specialistOnDuty === 'AVAILABLE' ? 'text-emerald-800 font-medium' : 'text-slate-500'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${fac.services.specialistOnDuty === 'AVAILABLE' ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                      Specialist
                     </span>
                   </div>
                 </div>

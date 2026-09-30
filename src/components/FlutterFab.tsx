@@ -15,6 +15,7 @@ interface FlutterFabProps {
   onLaunchScenario2: () => void;
   onOpenSync: () => void;
   onOpenGemini: () => void;
+  onOpenMentalHealth?: () => void;
   pendingSyncCount: number;
 }
 
@@ -23,6 +24,7 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
   onLaunchScenario2,
   onOpenSync,
   onOpenGemini,
+  onOpenMentalHealth,
   pendingSyncCount,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +41,9 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
               setIsOpen(false);
               onLaunchScenario1();
             }}
-            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-slate-800 rounded-xl shadow-lg border border-slate-200 hover:bg-slate-50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
+            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-emerald-950 rounded-2xl shadow-lg border border-emerald-100 hover:bg-emerald-50/50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
           >
-            <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
               <Pill className="w-4 h-4" />
             </div>
             <span>Scenario 1: Medicine Shortage</span>
@@ -52,9 +54,9 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
               setIsOpen(false);
               onLaunchScenario2();
             }}
-            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-slate-800 rounded-xl shadow-lg border border-slate-200 hover:bg-slate-50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
+            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-emerald-950 rounded-2xl shadow-lg border border-emerald-100 hover:bg-emerald-50/50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
           >
-            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
               <HeartHandshake className="w-4 h-4" />
             </div>
             <span>Scenario 2: Patient Transfer</span>
@@ -65,28 +67,43 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
               setIsOpen(false);
               onOpenGemini();
             }}
-            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-slate-800 rounded-xl shadow-lg border border-slate-200 hover:bg-slate-50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
+            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-emerald-950 rounded-2xl shadow-lg border border-emerald-100 hover:bg-emerald-50/50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
           >
-            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <span>Gemini AI Orchestrator</span>
           </button>
+
+          {onOpenMentalHealth && (
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                onOpenMentalHealth();
+              }}
+              className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-emerald-950 rounded-2xl shadow-lg border border-emerald-100 hover:bg-emerald-50/50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
+            >
+              <div className="w-7 h-7 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+                <HeartHandshake className="w-4 h-4" />
+              </div>
+              <span>Mind & Calming Pacer (14416)</span>
+            </button>
+          )}
 
           <button
             onClick={() => {
               setIsOpen(false);
               onOpenSync();
             }}
-            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-slate-800 rounded-xl shadow-lg border border-slate-200 hover:bg-slate-50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
+            className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-emerald-950 rounded-2xl shadow-lg border border-emerald-100 hover:bg-emerald-50/50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
           >
-            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
               <Database className="w-4 h-4" />
             </div>
             <div className="flex items-center justify-between flex-1">
               <span>Offline Sync Gateway</span>
               {pendingSyncCount > 0 && (
-                <span className="px-1.5 py-0.5 bg-amber-500 text-white rounded text-[10px]">
+                <span className="px-1.5 py-0.5 bg-emerald-600 text-white rounded-full text-[10px]">
                   {pendingSyncCount}
                 </span>
               )}
@@ -102,7 +119,7 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
         className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl transition-all active:scale-90 ${
           isOpen
             ? 'bg-slate-800 text-white rotate-90'
-            : 'bg-teal-600 text-white hover:bg-teal-700 shadow-teal-700/20'
+            : 'bg-gradient-to-br from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700 shadow-emerald-800/20'
         }`}
       >
         {isOpen ? (
