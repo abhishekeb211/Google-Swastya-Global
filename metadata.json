@@ -1,0 +1,6 @@
+{
+  "name": "SwasthyaSetu Resilience Grid 2.0",
+  "description": "Federated, explainable, PQC-secured, offline-first health resource, referral, supply-chain and audit coordination network.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
