@@ -12,7 +12,8 @@ import {
   Smartphone,
   Tablet,
   Monitor,
-  Maximize2
+  Maximize2,
+  Bot
 } from 'lucide-react';
 
 export type DeviceMode = 'fluid' | 'mobile' | 'tablet' | 'desktop';
@@ -31,6 +32,7 @@ interface TopBarProps {
   onResetDemo: () => void;
   deviceMode: DeviceMode;
   setDeviceMode: (mode: DeviceMode) => void;
+  openAgenticSentinel?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -47,18 +49,20 @@ export const TopBar: React.FC<TopBarProps> = ({
   onResetDemo,
   deviceMode,
   setDeviceMode,
+  openAgenticSentinel,
 }) => {
   const [showRoleMenu, setShowRoleMenu] = React.useState(false);
   const [showScenarioMenu, setShowScenarioMenu] = React.useState(false);
 
   const navLinks = [
-    { id: 'live-state', label: 'Live Grid' },
-    { id: 'supply-forecast', label: 'Supply & Forecast' },
+    { id: 'live-state', label: 'Facilities' },
+    { id: 'network-map', label: 'Network Map' },
     { id: 'referral-care', label: 'Care Match' },
+    { id: 'supply-forecast', label: 'Supply Chain' },
     { id: 'mental-health', label: 'Mental Health' },
     { id: 'ambulance-fleet', label: 'Ambulance 108' },
-    { id: 'gemini-xai', label: 'Gemini XAI' },
-    { id: 'pqc-ledger', label: 'PQC Ledger' },
+    { id: 'cloudsql-analytics', label: 'Cloud SQL' },
+    { id: 'pqc-ledger', label: 'Audit Ledger' },
   ];
 
   const handleRoleChange = (roleKey: UserRole) => {
@@ -185,6 +189,19 @@ export const TopBar: React.FC<TopBarProps> = ({
               </span>
             )}
           </button>
+
+          {/* Agentic AI Sentinel & Daily Flow Healer */}
+          {openAgenticSentinel && (
+            <button
+              onClick={openAgenticSentinel}
+              title="Daily Automated Resilience Cron Active: Monitored by Sentinel-108 (Daily at 04:00 AM IST)"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-emerald-950 bg-emerald-50/80 hover:bg-emerald-100 border border-emerald-200/90 rounded-xl transition-all shadow-2xs min-h-[38px] sm:min-h-[36px] active:scale-95"
+            >
+              <Bot className="w-3.5 h-3.5 text-emerald-700 animate-pulse shrink-0" />
+              <span className="hidden sm:inline">Daily Auto-Heal</span>
+              <span className="hidden lg:inline text-[10px] font-mono text-emerald-700 font-normal">· Daily 04:00</span>
+            </button>
+          )}
 
           {/* Role Context Switcher */}
           <div className="relative">

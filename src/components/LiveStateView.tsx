@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Facility, FacilityType, FreshnessStatus, CapabilityState } from '../types';
+import { CardIconBadge } from './CardIconBadge';
 import { 
   Building2, 
   Search, 
@@ -14,7 +15,9 @@ import {
   Wind, 
   Clock,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Package,
+  Layers
 } from 'lucide-react';
 
 interface LiveStateViewProps {
@@ -111,37 +114,55 @@ export const LiveStateView: React.FC<LiveStateViewProps> = ({
           </div>
         </div>
 
-        {/* Aggregate Network Numbers */}
+        {/* Aggregate Network Numbers with Consistent Vector Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-5 pt-5 border-t border-slate-100 text-xs">
-          <div className="bg-slate-50 p-3 rounded border border-slate-200">
-            <div className="text-slate-500">Registered Facilities</div>
-            <div className="text-lg font-bold text-slate-900 tabular-nums mt-0.5">30 Units</div>
-            <div className="text-[11px] text-emerald-700 mt-0.5">28 Mesh Synchronized</div>
+          <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 flex items-start gap-2.5">
+            <CardIconBadge icon={<Building2 className="w-4 h-4" />} variant="emerald" size="sm" />
+            <div>
+              <div className="text-slate-500">Registered Facilities</div>
+              <div className="text-lg font-bold text-slate-900 tabular-nums mt-0.5">30 Units</div>
+              <div className="text-[11px] text-emerald-700 mt-0.5">28 Mesh Synced</div>
+            </div>
           </div>
-          <div className="bg-slate-50 p-3 rounded border border-slate-200">
-            <div className="text-slate-500">Total Functional Beds</div>
-            <div className="text-lg font-bold text-slate-900 tabular-nums mt-0.5">582 Beds</div>
-            <div className="text-[11px] text-slate-600 mt-0.5">50 Ready for Admission</div>
+          <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 flex items-start gap-2.5">
+            <CardIconBadge icon={<Activity className="w-4 h-4" />} variant="teal" size="sm" />
+            <div>
+              <div className="text-slate-500">Total Functional Beds</div>
+              <div className="text-lg font-bold text-slate-900 tabular-nums mt-0.5">582 Beds</div>
+              <div className="text-[11px] text-slate-600 mt-0.5">50 Ready Today</div>
+            </div>
           </div>
-          <div className="bg-slate-50 p-3 rounded border border-slate-200">
-            <div className="text-slate-500">ICU Ready Capacity</div>
-            <div className="text-lg font-bold text-teal-700 tabular-nums mt-0.5">7 Beds</div>
-            <div className="text-[11px] text-slate-600 mt-0.5">Across 3 Hospitals</div>
+          <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 flex items-start gap-2.5">
+            <CardIconBadge icon={<Stethoscope className="w-4 h-4" />} variant="rose" size="sm" />
+            <div>
+              <div className="text-slate-500">ICU Ready Capacity</div>
+              <div className="text-lg font-bold text-rose-700 tabular-nums mt-0.5">7 Beds</div>
+              <div className="text-[11px] text-slate-600 mt-0.5">3 Hospitals</div>
+            </div>
           </div>
-          <div className="bg-slate-50 p-3 rounded border border-slate-200">
-            <div className="text-slate-500">Active Soft Holds</div>
-            <div className="text-lg font-bold text-amber-700 tabular-nums mt-0.5">3 Enroute</div>
-            <div className="text-[11px] text-amber-600 mt-0.5">15-min Lock Protected</div>
+          <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 flex items-start gap-2.5">
+            <CardIconBadge icon={<Clock className="w-4 h-4" />} variant="amber" size="sm" />
+            <div>
+              <div className="text-slate-500">Active Soft Holds</div>
+              <div className="text-lg font-bold text-amber-700 tabular-nums mt-0.5">3 Enroute</div>
+              <div className="text-[11px] text-amber-600 mt-0.5">15-min Lock Active</div>
+            </div>
           </div>
-          <div className="bg-slate-50 p-3 rounded border border-slate-200">
-            <div className="text-slate-500">Data Quality Score</div>
-            <div className="text-lg font-bold text-emerald-700 tabular-nums mt-0.5">98.4%</div>
-            <div className="text-[11px] text-slate-500 mt-0.5">0 Anomalies Detected</div>
+          <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 flex items-start gap-2.5">
+            <CardIconBadge icon={<Check className="w-4 h-4" />} variant="emerald" size="sm" />
+            <div>
+              <div className="text-slate-500">Data Quality Score</div>
+              <div className="text-lg font-bold text-emerald-800 tabular-nums mt-0.5">98.4%</div>
+              <div className="text-[11px] text-slate-500 mt-0.5">0 Anomalies</div>
+            </div>
           </div>
-          <div className="bg-slate-50 p-3 rounded border border-slate-200">
-            <div className="text-slate-500">PQC Signature Mesh</div>
-            <div className="text-lg font-bold text-slate-900 tabular-nums mt-0.5">ML-DSA-65</div>
-            <div className="text-[11px] text-teal-700 mt-0.5">NIST FIPS-204 Valid</div>
+          <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 flex items-start gap-2.5">
+            <CardIconBadge icon={<ShieldAlert className="w-4 h-4" />} variant="blue" size="sm" />
+            <div>
+              <div className="text-slate-500">PQC Signature Mesh</div>
+              <div className="text-lg font-bold text-slate-900 tabular-nums mt-0.5">ML-DSA-65</div>
+              <div className="text-[11px] text-sky-700 mt-0.5">NIST FIPS-204</div>
+            </div>
           </div>
         </div>
       </div>
@@ -206,26 +227,51 @@ export const LiveStateView: React.FC<LiveStateViewProps> = ({
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-semibold text-slate-900">
-                          {fac.name}
-                        </h3>
-                        <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-mono tabular-nums">
-                          <span className={`w-1.5 h-1.5 rounded-full ${
-                            fac.freshness === 'LIVE' ? 'bg-emerald-500 animate-pulse' : 
-                            fac.freshness === 'CURRENT' ? 'bg-teal-500' : 
-                            fac.freshness === 'AGING' ? 'bg-amber-500' : 'bg-rose-500'
-                          }`}></span>
-                          {fac.lastSyncTime}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
-                        <span>{fac.type.replace('_', ' ')}</span>
-                        <span aria-hidden="true" className="text-slate-300">·</span>
-                        <span>{fac.district}</span>
-                        <span aria-hidden="true" className="text-slate-300">·</span>
-                        <span>Connectivity: {fac.connectivity}</span>
+                    <div className="flex items-start gap-3">
+                      <CardIconBadge
+                        icon={
+                          fac.type === 'DISTRICT_HOSPITAL' ? (
+                            <Building2 className="w-4 h-4" />
+                          ) : fac.type === 'WAREHOUSE' ? (
+                            <Package className="w-4 h-4" />
+                          ) : fac.type === 'CHC' ? (
+                            <Layers className="w-4 h-4" />
+                          ) : (
+                            <Stethoscope className="w-4 h-4" />
+                          )
+                        }
+                        variant={
+                          fac.type === 'DISTRICT_HOSPITAL'
+                            ? 'blue'
+                            : fac.type === 'WAREHOUSE'
+                            ? 'amber'
+                            : fac.type === 'CHC'
+                            ? 'teal'
+                            : 'emerald'
+                        }
+                        size="md"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-semibold text-slate-900">
+                            {fac.name}
+                          </h3>
+                          <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-mono tabular-nums">
+                            <span className={`w-1.5 h-1.5 rounded-full ${
+                              fac.freshness === 'LIVE' ? 'bg-emerald-500 animate-pulse' : 
+                              fac.freshness === 'CURRENT' ? 'bg-teal-500' : 
+                              fac.freshness === 'AGING' ? 'bg-amber-500' : 'bg-rose-500'
+                            }`}></span>
+                            {fac.lastSyncTime}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                          <span>{fac.type.replace('_', ' ')}</span>
+                          <span aria-hidden="true" className="text-slate-300">·</span>
+                          <span>{fac.district}</span>
+                          <span aria-hidden="true" className="text-slate-300">·</span>
+                          <span>Connectivity: {fac.connectivity}</span>
+                        </div>
                       </div>
                     </div>
 

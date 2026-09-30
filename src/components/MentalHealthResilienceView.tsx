@@ -9,6 +9,7 @@ import {
   BedState
 } from '../types';
 import { soothingAudio, generateFhirPhq9Response } from '../services/soundAndInteroperability';
+import { TelemanasSanctuaryGraphic } from './TelemanasSanctuaryGraphic';
 import { 
   Heart, 
   Headphones, 
@@ -276,6 +277,11 @@ export const MentalHealthResilienceView: React.FC<MentalHealthResilienceViewProp
           </div>
         </div>
       </div>
+
+      {/* Graphical Sanctuary Botanical Biofeedback & Mindfulness Section */}
+      <TelemanasSanctuaryGraphic
+        onOpenTelemanas={() => setActiveTab('telemanas')}
+      />
 
       {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-emerald-100">

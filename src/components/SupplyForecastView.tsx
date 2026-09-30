@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MedicineInventory, Facility, RedistributionTransfer, ResilienceStatus } from '../types';
+import { CardIconBadge } from './CardIconBadge';
 import { 
   Pill, 
   TrendingDown, 
@@ -203,19 +204,32 @@ export const SupplyForecastView: React.FC<SupplyForecastViewProps> = ({
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-slate-900">
-                            {inv.medicineName}
-                          </h4>
-                          {getStatusBadge(inv.resilienceStatus)}
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
-                          <span className="font-mono text-slate-700">{inv.medicineCode}</span>
-                          <span>·</span>
-                          <span>{inv.facilityName}</span>
-                          <span>·</span>
-                          <span>Expires {inv.expiryDate}</span>
+                      <div className="flex items-start gap-3">
+                        <CardIconBadge
+                          icon={<Pill className="w-4 h-4" />}
+                          variant={
+                            inv.resilienceStatus === 'CRITICAL'
+                              ? 'rose'
+                              : inv.resilienceStatus === 'AT_RISK'
+                              ? 'amber'
+                              : 'emerald'
+                          }
+                          size="md"
+                        />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-sm font-bold text-slate-900">
+                              {inv.medicineName}
+                            </h4>
+                            {getStatusBadge(inv.resilienceStatus)}
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                            <span className="font-mono text-slate-700">{inv.medicineCode}</span>
+                            <span aria-hidden="true" className="text-slate-300">·</span>
+                            <span>{inv.facilityName}</span>
+                            <span aria-hidden="true" className="text-slate-300">·</span>
+                            <span>Expires {inv.expiryDate}</span>
+                          </div>
                         </div>
                       </div>
 

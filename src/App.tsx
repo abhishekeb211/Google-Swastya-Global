@@ -38,7 +38,11 @@ import { AmbulanceFleetView } from './components/AmbulanceFleetView';
 import { GeminiOrchestratorView } from './components/GeminiOrchestratorView';
 import { PqcAuditLedgerView } from './components/PqcAuditLedgerView';
 import { OfflineSyncModal } from './components/OfflineSyncModal';
+import { HeroSlideshow } from './components/HeroSlideshow';
 import { ScenarioModals } from './components/ScenarioModals';
+import { AgenticSentinelModal } from './components/AgenticSentinelModal';
+import { CloudSqlAnalyticsView } from './components/CloudSqlAnalyticsView';
+import { NetworkTopologyGraphic } from './components/NetworkTopologyGraphic';
 import { FlutterBottomNav } from './components/FlutterBottomNav';
 import { FlutterFab } from './components/FlutterFab';
 
@@ -100,6 +104,70 @@ export default function App() {
   // Guided scenario walkthrough modals
   const [scenario1Open, setScenario1Open] = useState(false);
   const [scenario2Open, setScenario2Open] = useState(false);
+  const [showPresentation, setShowPresentation] = useState(true);
+  const [isAgenticModalOpen, setIsAgenticModalOpen] = useState(false);
+
+  // Apply Agentic Auto-Heal Patches to System State
+  const handleApplyAgenticPatches = (resolutions: any[]) => {
+    resolutions.forEach((res) => {
+      if (res.issueType === 'BED_HOLD_DEADLOCK' && res.patch?.referralId) {
+        setActiveReferrals((prev) =>
+          prev.map((r) =>
+            r.id === res.patch.referralId
+              ? { ...r, status: 'ACCEPTED', bedHoldStatus: 'RESERVED' }
+              : r
+          )
+        );
+        appendLedgerEvent(
+          'BED_RESERVED',
+          `Sentinel-108 Auto-Healed Hold Deadlock: Confirmed bed reservation for patient`,
+          res.facility || 'District Hospital'
+        );
+      } else if (res.issueType === 'SUPPLY_FLOW_STOPPAGE' && res.patch?.toFacilityId) {
+        setInventories((prev) =>
+          prev.map((inv) => {
+            if (inv.facilityId === res.patch.toFacilityId && inv.medicineCode === res.patch.medicineCode) {
+              const newCurrent = inv.currentStock + (res.patch.transferQuantity || 400);
+              const newDos = Math.round((newCurrent / (inv.forecastDailyDemand || 103)) * 10) / 10;
+              return {
+                ...inv,
+                currentStock: newCurrent,
+                daysOfSupply: newDos,
+                resilienceStatus: newDos < 4 ? 'CRITICAL' : newDos < 7 ? 'AT_RISK' : 'STABLE',
+                replenishmentGap: Math.max(0, inv.leadTimeDays - Math.floor(newDos)),
+              };
+            }
+            return inv;
+          })
+        );
+        appendLedgerEvent(
+          'SHIPMENT_DISPATCHED',
+          `Sentinel-108 Auto-Healed Supply Jam: Dispatched ${res.patch.transferQuantity} units ${res.patch.medicineName}`,
+          res.patch.fromFacilityName || 'PHC-B Shirwal'
+        );
+      } else if (res.issueType === 'PQC_HASH_INTEGRITY_MISMATCH') {
+        setLedgerEvents((prev) =>
+          prev.map((evt) =>
+            evt.eventHash?.startsWith('f1a948bc')
+              ? { ...evt, eventHash: 'a7c938de9201f84b3917dc261904aef72c49b6d801e23f99aa1184bcde671042', verified: true }
+              : evt
+          )
+        );
+      }
+    });
+
+    showToast('Sentinel-108: Operational flow stoppage autonomously resolved by Backend Agent!');
+  };
+
+  const handleInjectBlockage = (blockageType: string) => {
+    if (blockageType === 'BED_HOLD_DEADLOCK') {
+      showToast('⚠️ Simulated Bed Hold Deadlock: Emergency referral hold stalled.');
+    } else if (blockageType === 'SUPPLY_BOTTLENECK') {
+      showToast('⚠️ Simulated Medicine Shortage: Acute stock depletion detected.');
+    } else if (blockageType === 'MERKLE_DESYNC') {
+      showToast('⚠️ Simulated Hash Mismatch: Block #14202 checksum alerted.');
+    }
+  };
 
   // Notification toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -414,6 +482,7 @@ export default function App() {
         onResetDemo={handleResetDemo}
         deviceMode={deviceMode}
         setDeviceMode={setDeviceMode}
+        openAgenticSentinel={() => setIsAgenticModalOpen(true)}
       />
 
       {/* Master Operating Loop Visual Ribbon */}
@@ -432,7 +501,7 @@ export default function App() {
 
       {/* Main Viewport Workspace Container with Adaptive / Flutter Device Mode */}
       <div className={`flex-1 w-full transition-all ${deviceMode !== 'fluid' ? 'bg-[#F2F7F4]/70 py-2 sm:py-4' : ''}`}>
-        <main className={`w-full transition-all pb-24 md:pb-8 ${
+        <main className={`w-full transition-all pb-24 md:pb-8 space-y-5 ${
           deviceMode === 'mobile'
             ? 'max-w-[400px] mx-auto border-x border-emerald-100 shadow-xl bg-white min-h-[calc(100vh-140px)] px-3 py-4'
             : deviceMode === 'tablet'
@@ -442,6 +511,25 @@ export default function App() {
             : 'max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6'
         }`}>
           {currentTab === 'live-state' && (
+            <div className="flex items-center justify-between bg-emerald-50/70 border border-emerald-200/80 px-4 py-2 rounded-xl mb-4 text-xs">
+              <span className="text-emerald-950 font-bold">
+                Satara District Care Facilities Overview (30 Centers)
+              </span>
+              <button
+                onClick={() => setShowPresentation(!showPresentation)}
+                className="px-2.5 py-1 bg-white border border-emerald-200 rounded-lg text-emerald-800 font-bold hover:bg-emerald-100 transition-colors shadow-2xs"
+              >
+                {showPresentation ? 'Hide Intro Slides' : 'View Intro Slides'}
+              </button>
+            </div>
+          )}
+
+          {/* Graphical Presentation Slides (Title, Problem, Use Cases) */}
+          {showPresentation && currentTab === 'live-state' && (
+            <HeroSlideshow onNavigateTab={(tab) => setCurrentTab(tab as any)} />
+          )}
+
+          {currentTab === 'live-state' && (
             <LiveStateView
               facilities={facilities}
               onSelectFacilityForReferral={(fac) => {
@@ -449,6 +537,18 @@ export default function App() {
               }}
               onSelectFacilityForStock={(fac) => {
                 setCurrentTab('supply-forecast');
+              }}
+            />
+          )}
+
+          {currentTab === 'network-map' && (
+            <NetworkTopologyGraphic
+              facilities={facilities}
+              onSelectFacility={(fac) => {
+                setCurrentTab('live-state');
+              }}
+              onNavigateTab={(tab) => {
+                setCurrentTab(tab);
               }}
             />
           )}
@@ -503,6 +603,10 @@ export default function App() {
               activeReferrals={activeReferrals}
               onSimulateProgress={handleSimulateAmbulanceProgress}
             />
+          )}
+
+          {currentTab === 'cloudsql-analytics' && (
+            <CloudSqlAnalyticsView />
           )}
 
           {currentTab === 'gemini-xai' && (
@@ -580,6 +684,22 @@ export default function App() {
         scenario2Open={scenario2Open}
         onCloseScenario2={() => setScenario2Open(false)}
         onApplyScenario2Step={handleApplyScenario2Step}
+      />
+
+      {/* Backend Agentic AI Sentinel Modal */}
+      <AgenticSentinelModal
+        isOpen={isAgenticModalOpen}
+        onClose={() => setIsAgenticModalOpen(false)}
+        systemState={{
+          facilities,
+          inventories,
+          ambulances,
+          ledgerEvents,
+          activeReferrals,
+          userContext
+        }}
+        onApplyHealPatches={handleApplyAgenticPatches}
+        onInjectBlockage={handleInjectBlockage}
       />
 
     </div>

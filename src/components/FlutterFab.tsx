@@ -16,6 +16,7 @@ interface FlutterFabProps {
   onOpenSync: () => void;
   onOpenGemini: () => void;
   onOpenMentalHealth?: () => void;
+  onOpenVideoExport?: () => void;
   pendingSyncCount: number;
 }
 
@@ -25,6 +26,7 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
   onOpenSync,
   onOpenGemini,
   onOpenMentalHealth,
+  onOpenVideoExport,
   pendingSyncCount,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,6 +89,21 @@ export const FlutterFab: React.FC<FlutterFabProps> = ({
                 <HeartHandshake className="w-4 h-4" />
               </div>
               <span>Mind & Calming Pacer (14416)</span>
+            </button>
+          )}
+
+          {onOpenVideoExport && (
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                onOpenVideoExport();
+              }}
+              className="flex items-center gap-2.5 px-4 py-2.5 bg-white text-emerald-950 rounded-2xl shadow-lg border border-emerald-100 hover:bg-emerald-50/50 transition-all text-xs font-semibold w-full justify-start active:scale-95 min-h-[44px]"
+            >
+              <div className="w-7 h-7 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+                <Play className="w-4 h-4 fill-current" />
+              </div>
+              <span>Export Demo Video (.webm)</span>
             </button>
           )}
 
